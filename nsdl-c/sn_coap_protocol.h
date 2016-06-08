@@ -167,6 +167,21 @@ extern int8_t sn_coap_protocol_set_retransmission_parameters(struct coap_s *hand
         uint8_t resending_count, uint8_t resending_interval);
 
 /**
+ * \fn int8_t sn_coap_protocol_set_non_confirmable_resent_parameters(bool enable_resent)
+ *
+ * \brief  If re-transmissions are enabled (see also sn_nsdl_set_retransmission_parameters),
+ *         this function enables/disables a resent of a non confirmable message. This
+ *         improves the transmission reliability by duplicating the message (including
+ *         header). The CoAP protocol at receiver side will recognize the duplications
+ *         and discards the redundant messages.
+ *
+ * \param bool enable_resent when set to resent non confirmable messages
+ * \return  0 = success, -1 = failure
+ */
+extern int8_t sn_coap_protocol_set_non_confirmable_resent_parameters(struct coap_s *handle,
+        bool enable_resent);
+
+/**
  * \fn int8_t sn_coap_protocol_set_retransmission_buffer(uint8_t buffer_size_messages, uint16_t buffer_size_bytes)
  *
  * \brief If re-transmissions are enabled, this function changes message retransmission queue size.

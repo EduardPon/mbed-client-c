@@ -273,6 +273,23 @@ int8_t sn_coap_protocol_set_retransmission_parameters(struct coap_s *handle,
     return -1;
 }
 
+int8_t sn_coap_protocol_set_non_confirmable_resent_parameters(struct coap_s *handle,
+        bool enable_resent)
+{
+#if ENABLE_RESENDINGS
+    if (handle == NULL) {
+        return -1;
+    }
+
+    handle->resent_non_confirmable = enable_resent;
+
+    return 0;
+
+#endif
+    return -1;
+}
+
+
 int8_t sn_coap_protocol_set_retransmission_buffer(struct coap_s *handle,
         uint8_t buffer_size_messages, uint16_t buffer_size_bytes)
 {
@@ -475,8 +492,10 @@ int16_t sn_coap_protocol_build(struct coap_s *handle, sn_nsdl_addr_s *dst_addr_p
 
 #if ENABLE_RESENDINGS /* If Message resending is not used at all, this part of code will not be compiled */
 
-    /* Check if built Message type was confirmable, only these messages are resent */
-    if (src_coap_msg_ptr->msg_type == COAP_MSG_TYPE_CONFIRMABLE) {
+    /* Check if built Message type was confirmable, only these messages are resent when not acknowledged.
+       NON confirmable messages can be queued when sn_nsdl_set_retransmission_parameters() explicit requests to perform a scheduled resent */
+    if( (src_coap_msg_ptr->msg_type == COAP_MSG_TYPE_CONFIRMABLE) ||
+        ((src_coap_msg_ptr->msg_type == COAP_MSG_TYPE_NON_CONFIRMABLE) && (handle->resent_non_confirmable)) ) {
         /* Store message to Linked list for resending purposes */
         sn_coap_protocol_linked_list_send_msg_store(handle, dst_addr_ptr, byte_count_built, dst_packet_data_ptr,
                 handle->system_time + (uint32_t)(handle->sn_coap_resending_intervall * RESPONSE_RANDOM_FACTOR),

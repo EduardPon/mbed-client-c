@@ -183,6 +183,7 @@ struct coap_s {
     #if ENABLE_RESENDINGS /* If Message resending is not used at all, this part of code will not be compiled */
         coap_send_msg_list_t linked_list_resent_msgs; /* Active resending messages are stored to this Linked list */
         uint16_t count_resent_msgs;
+        bool resent_non_confirmable; /* Can be modified by sn_nsdl_set_retransmission_parameters, to perform always a resent for non confirmable messages */
     #endif
 
     #if YOTTA_CFG_COAP_DUPLICATION_MAX_MSGS_COUNT /* If Message duplication detection is not used at all, this part of code will not be compiled */

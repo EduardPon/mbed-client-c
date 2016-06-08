@@ -642,6 +642,20 @@ extern void sn_nsdl_release_allocated_coap_msg_mem(struct nsdl_s *handle, sn_coa
 extern int8_t sn_nsdl_set_retransmission_parameters(struct nsdl_s *handle, uint8_t resending_count, uint8_t resending_interval);
 
 /**
+ * \fn int8_t sn_nsdl_set_non_confirmable_resent_parameters(bool enable_resent)
+ *
+ * \brief  If re-transmissions are enabled (see also sn_nsdl_set_retransmission_parameters),
+ *         this function enables/disables a resent of a non confirmable message. This
+ *         improves the transmission reliability by duplicating the message (including
+ *         header). The CoAP protocol at receiver side will recognize the duplications
+ *         and discards the redundant messages.
+ *
+ * \param bool enable_resent when set to resent non confirmable messages
+ * \return  0 = success, -1 = failure
+ */
+extern int8_t sn_nsdl_set_non_confirmable_resent_parameters(struct nsdl_s *handle, bool enable_resent);
+
+/**
  * \fn int8_t sn_nsdl_set_retransmission_buffer(struct nsdl_s *handle, uint8_t buffer_size_messages, uint16_t buffer_size_bytes)
  *
  * \brief If re-transmissions are enabled, this function changes message retransmission queue size.

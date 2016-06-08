@@ -2480,6 +2480,16 @@ extern int8_t sn_nsdl_set_retransmission_parameters(struct nsdl_s *handle,
                                                           resending_count,resending_interval);
 }
 
+extern int8_t sn_nsdl_set_non_confirmable_resent_parameters(struct nsdl_s *handle,
+    bool enable_resent)
+{
+    if (handle == NULL) {
+        return SN_NSDL_FAILURE;
+    }
+    return sn_coap_protocol_set_non_confirmable_resent_parameters(handle->grs->coap,
+                                                                  enable_resent);
+}
+
 extern int8_t sn_nsdl_set_retransmission_buffer(struct nsdl_s *handle,
         uint8_t buffer_size_messages, uint16_t buffer_size_bytes)
 {
